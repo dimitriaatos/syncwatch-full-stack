@@ -1,6 +1,6 @@
 import SyncWatch from '@dimitriaatos/syncwatch'
 import ReconnectingWebSocket from 'reconnectingwebsocket'
-import timeSync from 'timesync/dist/timesync'
+import * as timeSync from 'timesync/dist/timesync'
 import EventEmitter from 'events'
 
 const sync = (syncWatch, options = {}) => {
