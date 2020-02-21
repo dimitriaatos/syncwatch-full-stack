@@ -3,8 +3,8 @@ const WebSocket = require('ws')
 const EventEmitter = require('events')
 const events = new EventEmitter()
 
-module.exports = (syncWatch, server) => {
-	const wss = new WebSocket.Server({ server })
+module.exports = (syncWatch) => {
+	const wss = new WebSocket.Server({ server: syncWatch._server })
 
 	const broadcast = (data, ws) => {
 		data = JSON.stringify(data)
@@ -39,5 +39,5 @@ module.exports = (syncWatch, server) => {
 		})
 	})
 
-	return {broadcast, events}
+	return {broadcast, events, wss}
 }

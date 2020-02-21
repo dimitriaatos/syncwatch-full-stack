@@ -4,12 +4,11 @@ const serverWatchWebSocket = require('./ws')
 const ServerWatch = class extends StopWatch {
 	constructor(cb, {server, cli, ...options}){
 		super(cb, options)
+		this._server
 
-		cli && require('./cli')(this)
+		this.server = server
 
-		const {broadcast, events} = serverWatchWebSocket(this, server)
-
-		this.on = events.on.bind(events)
+		cli && (this.cli = require('./cli')(this))
 
 		;[
 			'toggle', 'reset',
@@ -17,7 +16,7 @@ const ServerWatch = class extends StopWatch {
 			'pause', 'stop',
 			'update'
 		].forEach(methodName => {
-			this[methodName] = (...args) => broadcast(super[methodName](...args))
+			this[methodName] = (...args) => this.broadcast(super[methodName](...args))
 		})
 
 		;[
@@ -28,12 +27,23 @@ const ServerWatch = class extends StopWatch {
 				get: () => super[propertyName],
 				set: val => {
 					super[propertyName] = val
-					broadcast(this.output())
+					this.broadcast(this.output())
 					return val
 				}
 			})
 		})
 
+	}
+
+	set server(s){
+		this._server = s
+		Object.assign(this, serverWatchWebSocket(this))
+		this.on = this.events.on.bind(this.events)
+		return this._server
+	}
+
+	get server(){
+		return this._server
 	}
 }
 

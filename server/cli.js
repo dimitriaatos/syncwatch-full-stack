@@ -15,11 +15,6 @@ module.exports = (serverWatch) => {
 	ee.on('open', () => open(url, {app: 'google chrome'}))
 	ee.on('url', () => console.log(url))
 	ee.on('copy', () => copy(url))
-	// ee.on('port', (port) => {
-	// 	server.port = port
-	// 	server.service.close()
-	// 	server.service = listen()
-	// })
 
 	;['play', 'pause', 'start', 'stop'].forEach(
 		cmd => ee.on(
@@ -38,4 +33,5 @@ module.exports = (serverWatch) => {
 	}
 
 	rl.question('', cli)
+	return ee
 }
